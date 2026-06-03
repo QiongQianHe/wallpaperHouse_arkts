@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "壁纸小屋 - 发现美好壁纸"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "壁纸小屋主页"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "壁纸小屋"
+    },
+    {
+      "name": "internet_reason",
+      "value": "用于加载在线壁纸资源"
+    },
+    {
+      "name": "network_reason",
+      "value": "用于检测网络连接状态"
+    },
+    {
+      "name": "location_reason",
+      "value": "用于提供基于位置的壁纸推荐"
+    }
+  ]
+}
