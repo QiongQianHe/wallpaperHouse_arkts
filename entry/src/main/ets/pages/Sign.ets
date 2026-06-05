@@ -4,6 +4,7 @@ import { use_mock } from '../utils/env'
 import storage from '../utils/storage'
 import { toast } from '../component/ShowToast'
 import request from '../utils/http'
+import { API } from '../utils/api_config'
 
 // 登录页面 - NavDestination子页面，登录/注册合一
 
@@ -13,7 +14,7 @@ export function SignDestination() {
 }
 
 @Component
-export struct SignDestinationComponent {
+struct SignDestinationComponent {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State form: SignForm = { uname: '', password: '' }
   @State loading: boolean = false
@@ -21,6 +22,16 @@ export struct SignDestinationComponent {
   async signIn(): Promise<void> {
     if (!this.form.uname || !this.form.password) {
       toast.error('请输入账号和密码')
+      return
+    }
+
+    // 验证输入格式
+    if (this.form.uname.length < 3) {
+      toast.error('账号长度至少3个字符')
+      return
+    }
+    if (this.form.password.length < 6) {
+      toast.error('密码长度至少6个字符')
       return
     }
 
@@ -32,22 +43,28 @@ export struct SignDestinationComponent {
         await new Promise<void>((resolve: Function) => { setTimeout(resolve, 800) })
         res = mockLogin(this.form.uname, this.form.password)
       } else {
-        res = await request.post('/api/sign/reg_login', this.form) as SignResponse
+        // 使用后端服务
+        res = await request.post(API.AUTH.LOGIN, this.form) as SignResponse
       }
 
       this.loading = false
       if (res.code === 200) {
+        // 保存token和用户名
         await storage.set('token', res.data as string)
         await storage.set('uname', this.form.uname)
+        // 更新AppStorage，让MineBar等组件实时响应登录状态变化
+        AppStorage.setOrCreate('isLoggedIn', true)
+        AppStorage.setOrCreate('uname', this.form.uname)
         toast.success('登录成功')
-        // 返回首页
+        // 清空导航栈，返回首页
         this.navPathStack.clear()
       } else {
-        toast.error(res.msg as string)
+        toast.error(res.msg || '登录失败')
       }
-    } catch {
+    } catch (err) {
       this.loading = false
-      toast.error()
+      console.error('登录异常:', JSON.stringify(err))
+      toast.error('网络错误，请稍后重试')
     }
   }
 

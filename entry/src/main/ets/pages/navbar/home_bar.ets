@@ -10,7 +10,7 @@ export function HomeBarBuilder() {
 }
 
 @Component
-export struct HomeBar {
+struct HomeBar {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State banners: BannerItem[] = []
   @State recommendList: WallpaperItem[] = []

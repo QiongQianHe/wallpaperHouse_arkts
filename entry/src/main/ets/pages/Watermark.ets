@@ -11,7 +11,7 @@ export function WatermarkDestination() {
 }
 
 @Component
-export struct WatermarkDestinationComponent {
+struct WatermarkDestinationComponent {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State watermarkText: string = '壁纸小屋'
   @State fontSize: number = 28

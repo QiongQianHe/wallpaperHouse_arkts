@@ -10,7 +10,7 @@ export function SortBarBuilder() {
 }
 
 @Component
-export struct SortBar {
+struct SortBar {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State categories: CategoryItem[] = mockCategories
   @State location: string = '获取中...'

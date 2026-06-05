@@ -12,7 +12,7 @@ export function WallpaperDestination() {
 }
 
 @Component
-export struct WallpaperDestinationComponent {
+struct WallpaperDestinationComponent {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State list: WallpaperItem[] = []
   @State page: PageQuery = { offset: 1, limit: 10, count: 0 }

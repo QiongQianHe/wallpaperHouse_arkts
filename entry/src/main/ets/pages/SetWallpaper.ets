@@ -73,7 +73,7 @@ export function SetWallpaperDestination() {
 }
 
 @Component
-export struct SetWallpaperDestinationComponent {
+struct SetWallpaperDestinationComponent {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State currentItem: WallpaperItem = { id: '', title: '', url_type: 1, url: '', is_checked: false }
   @State isLiked: number = 0

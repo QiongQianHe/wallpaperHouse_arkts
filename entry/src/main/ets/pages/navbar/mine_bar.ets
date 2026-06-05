@@ -11,24 +11,60 @@ export function MineBarBuilder() {
 }
 
 @Component
-export struct MineBar {
+struct MineBar {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State avatar: string = mockUserInfo.avatar
-  @State uname: string = mockUserInfo.uname
-  @State isLoggedIn: boolean = false
-
+  // 使用 @StorageLink 实现跨组件响应式更新，登录成功后无需重建组件即可自动刷新
+  @StorageLink('uname') uname: string = mockUserInfo.uname
+  @StorageLink('isLoggedIn') isLoggedIn: boolean = false
   @State operateList: OperateItem[] = [
-    { icon: '🖼️', title: '我的壁纸', routeName: 'MineDetail', params: undefined },
-    { icon: '❤️', title: '我的收藏', routeName: 'MineDetail', params: undefined },
-    { icon: '✏️', title: '个人信息', routeName: 'MineDetail', params: undefined },
-    { icon: '📝', title: '图片水印', routeName: 'Watermark', params: undefined },
-    { icon: 'ℹ️', title: '关于壁纸', routeName: 'MineDetail', params: undefined },
+    {
+      icon: '🖼️',
+      title: '我的壁纸',
+      routeName: 'MineDetail',
+      params: undefined
+    },
+    {
+      icon: '❤️',
+      title: '我的收藏',
+      routeName: 'MineDetail',
+      params: undefined
+    },
+    {
+      icon: '✏️',
+      title: '个人信息',
+      routeName: 'MineDetail',
+      params: undefined
+    },
+    {
+      icon: '📝',
+      title: '图片水印',
+      routeName: 'Watermark',
+      params: undefined
+    },
+    {
+      icon: 'ℹ️',
+      title: '关于壁纸',
+      routeName: 'MineDetail',
+      params: undefined
+    },
   ]
 
   async aboutToAppear(): Promise<void> {
+    await this.refreshLoginStatus()
+  }
+
+  // 页面显示时刷新登录状态
+  async onPageShow(): Promise<void> {
+    await this.refreshLoginStatus()
+  }
+
+  async refreshLoginStatus(): Promise<void> {
+    // 从存储中读取登录状态
     const token = await storage.get('token')
     this.isLoggedIn = token !== ''
     if (this.isLoggedIn) {
+      // 已登录，获取保存的用户名
       const savedName = await storage.get('uname')
       if (savedName) {
         this.uname = savedName
@@ -37,10 +73,12 @@ export struct MineBar {
   }
 
   async logout(): Promise<void> {
+    // 清除所有存储数据（包括token、用户名等）
     await storage.clear()
     this.isLoggedIn = false
     this.uname = '未登录'
     toast.success('已退出登录')
+    // 清空导航栈并跳转到登录页
     this.navPathStack.clear()
     this.navPathStack.pushPathByName('Sign', undefined)
   }
@@ -87,11 +125,13 @@ export struct MineBar {
                   message: '确定要退出登录吗？',
                   primaryButton: {
                     value: '取消',
-                    action: (): void => {}
+                    action: () => {
+                      // 取消操作
+                    }
                   },
                   secondaryButton: {
                     value: '确定',
-                    action: (): void => {
+                    action: () => {
                       this.logout()
                     }
                   }
@@ -152,5 +192,15 @@ export struct MineBar {
       }
     }
     .scrollBar(BarState.Off)
+  }
+}
+// 用于预览的包装组件 —— 提供 @Consume 所需的依赖
+@Preview
+@Component
+struct MineBarPreview {
+  @Provide('navPathStack') navPathStack: NavPathStack = new NavPathStack()
+
+  build() {
+    MineBar()
   }
 }

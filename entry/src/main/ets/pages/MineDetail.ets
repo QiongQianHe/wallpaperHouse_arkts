@@ -60,7 +60,7 @@ export function MineDetailDestination() {
 }
 
 @Component
-export struct MineDetailDestinationComponent {
+struct MineDetailDestinationComponent {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State currentTab: number = 0
   @State title: string = '我的壁纸'

@@ -6,8 +6,7 @@ function show(message: string, duration: number): void {
   try {
     promptAction.showToast({
       message: message,
-      duration: duration,
-      bottom: '50%'
+      duration: duration
     })
   } catch (err) {
     console.error('Toast显示失败:', JSON.stringify(err))
