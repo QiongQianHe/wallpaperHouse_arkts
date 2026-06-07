@@ -72,7 +72,7 @@ export function mockLogin(username: string, password: string): SignResponse {
 export function getMockUserInfo(): MockUserInfo {
   let u = new MockUserInfo()
   u.id = '1'; u.avatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'
-  u.uname = '壁纸爱好者'; u.sex = 1; u.sex_tit = '男'; u.nation = '中国'; u.reg_time = '2025-06-01'
+  u.uname = '未登录'; u.sex = 1; u.sex_tit = ' '; u.nation = ' '; u.reg_time = ' '
   return u
 }
 

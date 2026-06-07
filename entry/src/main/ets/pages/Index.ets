@@ -9,52 +9,19 @@ import { MineDetailDestination } from './MineDetail'
 import { app_name, use_mock } from '../utils/env'
 import { initMockData } from '../utils/data_source'
 import storage from '../utils/storage'
-import common from '@ohos.app.ability.common'
-import { NetworkDiagnostic } from '../utils/network_diagnostic'
-
-// 主入口页面 - Navigation组件框架 + Tabs + 子页面路由
-// 使用 Navigation + NavPathStack 实现组件导航
+// 主入口页面 - Navigation 框架 + Tabs 底部导航 + 子页面路由
+// Navigation 包裹 Tabs：首页/分类/我的为 Tab 内容，子页面通过 NavDestination 全屏覆盖
 
 @Entry
 @Component
 struct Index {
   @Provide('navPathStack') navPathStack: NavPathStack = new NavPathStack()
   @State currentIndex: number = 0
-  @State isLoggedIn: boolean = false
-  @State userName: string = '未登录'
 
   async aboutToAppear(): Promise<void> {
-    // 初始化Mock数据和缓存
     initMockData()
-    // 获取上下文并初始化存储
-    const context = getContext(this) as common.UIAbilityContext
+    const context: Context = this.getUIContext().getHostContext()as Context
     await storage.init(context)
-    
-    // 网络诊断（仅开发环境）
-    if (!use_mock) {
-      NetworkDiagnostic.checkConfig()
-    }
-    
-    const token = await storage.get('token')
-    this.isLoggedIn = token !== ''
-    AppStorage.setOrCreate('navPathStack', this.navPathStack)
-    await this.checkLoginStatus()
-  }
-
-  // 生命周期方法
-  async onPageShow(): Promise<void> {
-    await this.checkLoginStatus()
-  }
-  async checkLoginStatus(): Promise<void> {
-    const token = await storage.get('token')
-    this.isLoggedIn = token !== ''
-    if (this.isLoggedIn) {
-      const uname = await storage.get('uname')
-      this.userName = uname || '用户'
-    } else {
-      this.userName = '未登录'
-    }
-    console.info('登录状态更新：', this.isLoggedIn, this.userName)
   }
 
   @Builder
@@ -68,14 +35,14 @@ struct Index {
     } else if (name === 'Watermark') {
       WatermarkDestination()
     } else if (name === 'MineDetail') {
-      MineDetailDestination()
+      MineDetailDestination(param)
     }
   }
 
   build() {
     Navigation(this.navPathStack) {
       Column() {
-        // 顶部导航栏
+        // 顶部标题栏
         Row() {
           Text(app_name)
             .fontSize(20)
@@ -92,7 +59,7 @@ struct Index {
         .backgroundColor('#ffffff')
         .padding({ left: 16, right: 4 })
 
-        // Tab 内容区域（占据剩余空间）
+        // Tab 内容区域
         Tabs({ index: this.currentIndex }) {
           TabContent() {
             HomeBarBuilder()
@@ -109,7 +76,7 @@ struct Index {
           }
           .tabBar(this.TabBarItem('👤', '我的', 2))
         }
-        .barPosition(BarPosition.End)  // TabBar 在底部
+        .barPosition(BarPosition.End)
         .barMode(BarMode.Fixed)
         .barHeight(56)
         .barBackgroundColor('#ffffff')

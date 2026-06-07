@@ -1,6 +1,8 @@
 import { mockCategories } from '../../utils/data_source'
 import { CategoryItem } from '../../interface/index'
 import { getRandomColor } from '../../utils/tools'
+import { Footer } from '../../component/Footer'
+import { getCurrentLocation, reverseGeocode, GeoInfo } from '../../utils/geolocation'
 
 // 分类Tab - 壁纸分类网格，支持定位导航
 
@@ -14,16 +16,31 @@ struct SortBar {
   @Consume('navPathStack') navPathStack: NavPathStack
   @State categories: CategoryItem[] = mockCategories
   @State location: string = '获取中...'
+  @State geoInfo: GeoInfo = new GeoInfo()
 
   aboutToAppear(): void {
     this.getLocation()
   }
 
   async getLocation(): Promise<void> {
-    // 模拟定位数据 - 模拟器上 geoLocationManager 可能不可用
-    this.location = '当前位置: 正在获取...'
-    await new Promise<void>((resolve: Function) => { setTimeout(resolve, 1000) })
-    this.location = '📍 定位服务 (演示功能)'
+    this.location = '正在获取位置...'
+    try {
+      // 1. 先获取经纬度
+      const geo = await getCurrentLocation(10)
+      this.geoInfo = geo
+
+      // 2. 逆地理编码获取城市名
+      const enriched = await reverseGeocode(geo.latitude, geo.longitude)
+
+      if (enriched.cityName) {
+        this.location = ` ${enriched.cityName}`
+      } else {
+        this.location = ` ${geo.latitude.toFixed(2)}, ${geo.longitude.toFixed(2)}`
+      }
+    } catch (err) {
+      console.error('定位失败:', JSON.stringify(err))
+      this.location = '授权后可获取位置'
+    }
   }
 
   build() {
@@ -31,10 +48,6 @@ struct SortBar {
       Column() {
         // 定位导航提示
         Row() {
-          Text('📍')
-            .fontSize(16)
-            .margin({ right: 6 })
-
           Text(this.location)
             .fontSize(12)
             .fontColor('#666666')
@@ -89,18 +102,7 @@ struct SortBar {
         .width('100%')
         .padding({ left: 16, right: 16 })
 
-        // Footer栏
-        Column() {
-          Text('壁纸小屋 v1.0.1')
-            .fontSize(11)
-            .fontColor('#cccccc')
-          Text('Copyright © 2026 Wallpaper House')
-            .fontSize(10)
-            .fontColor('#dddddd')
-            .margin({ top: 4 })
-        }
-        .width('100%')
-        .padding({ top: 30, bottom: 20 })
+        Footer()
       }
     }
     .scrollBar(BarState.Off)

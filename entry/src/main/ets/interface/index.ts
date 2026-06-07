@@ -46,8 +46,20 @@ export interface UserInfo {
   uname: string
   sex?: number
   sex_tit?: string
-  nation?: string
+  country?: string
   reg_time?: string
+  signature?: string
+}
+
+// 用户信息可观测类（供 @State/@Link 使用）
+export class UserInfoData {
+  avatar: string = ''
+  uname: string = ''
+  sex: string = '0'      // '0'-保密, '1'-男, '2'-女
+  sex_tit: string = ''
+  country: string = ''
+  reg_time: string = ''
+  signature: string = ''
 }
 
 export interface CollectionItem {

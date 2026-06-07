@@ -2,6 +2,7 @@ import { OperateItem } from '../../interface/index'
 import { mockUserInfo } from '../../utils/data_source'
 import { toast } from '../../component/ShowToast'
 import storage from '../../utils/storage'
+import { Footer } from '../../component/Footer'
 
 // 我的Tab - 用户中心
 
@@ -22,19 +23,19 @@ struct MineBar {
       icon: '🖼️',
       title: '我的壁纸',
       routeName: 'MineDetail',
-      params: undefined
+      params: { tabIndex: 0 }
     },
     {
       icon: '❤️',
       title: '我的收藏',
       routeName: 'MineDetail',
-      params: undefined
+      params: { tabIndex: 1 }
     },
     {
       icon: '✏️',
       title: '个人信息',
       routeName: 'MineDetail',
-      params: undefined
+      params: { tabIndex: 2 }
     },
     {
       icon: '📝',
@@ -46,28 +47,17 @@ struct MineBar {
       icon: 'ℹ️',
       title: '关于壁纸',
       routeName: 'MineDetail',
-      params: undefined
+      params: { tabIndex: 3 }
     },
   ]
 
   async aboutToAppear(): Promise<void> {
-    await this.refreshLoginStatus()
-  }
-
-  // 页面显示时刷新登录状态
-  async onPageShow(): Promise<void> {
-    await this.refreshLoginStatus()
-  }
-
-  async refreshLoginStatus(): Promise<void> {
-    // 从存储中读取登录状态
     const token = await storage.get('token')
-    this.isLoggedIn = token !== ''
-    if (this.isLoggedIn) {
-      // 已登录，获取保存的用户名
+    if (token) {
+      AppStorage.setOrCreate('isLoggedIn', true)
       const savedName = await storage.get('uname')
       if (savedName) {
-        this.uname = savedName
+        AppStorage.setOrCreate('uname', savedName)
       }
     }
   }
@@ -169,7 +159,7 @@ struct MineBar {
               .alignItems(VerticalAlign.Center)
             }
             .onClick(() => {
-              this.navPathStack.pushPathByName(item.routeName, undefined)
+              this.navPathStack.pushPathByName(item.routeName, item.params)
             })
           }, (item: OperateItem) => item.title)
         }
@@ -177,30 +167,9 @@ struct MineBar {
         .margin({ top: 12 })
         .divider({ strokeWidth: 0.5, color: '#f0f0f0', startMargin: 52 })
 
-        // Footer栏
-        Column() {
-          Text('壁纸小屋 v1.0.1')
-            .fontSize(11)
-            .fontColor('#cccccc')
-          Text('Copyright © 2026 Wallpaper House')
-            .fontSize(10)
-            .fontColor('#dddddd')
-            .margin({ top: 4 })
-        }
-        .width('100%')
-        .padding({ top: 30, bottom: 20 })
+        Footer()
       }
     }
     .scrollBar(BarState.Off)
-  }
-}
-// 用于预览的包装组件 —— 提供 @Consume 所需的依赖
-@Preview
-@Component
-struct MineBarPreview {
-  @Provide('navPathStack') navPathStack: NavPathStack = new NavPathStack()
-
-  build() {
-    MineBar()
   }
 }

@@ -90,8 +90,7 @@ struct SignDestinationComponent {
         Column() {
           // Logo区域
           Column() {
-            Text('🖼️')
-              .fontSize(52)
+            Image($r('app.media.cabin_icon')).width(60)
             Text('壁纸小屋')
               .fontSize(24)
               .fontWeight(FontWeight.Bold)

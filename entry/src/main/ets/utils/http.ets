@@ -76,6 +76,31 @@ class HttpRequest {
       throw new Error('网络请求失败') // 抛出Error对象
     }
   }
+
+  async put(url: string, data: Object): Promise<Object> {
+    try {
+      console.info('PUT请求:', this.baseUrl + url)
+      let h: Record<string, string> = await this.getHeaders()
+      let req = http.createHttp()
+      let resp = await req.request(this.baseUrl + url, {
+        method: http.RequestMethod.PUT,
+        header: h,
+        extraData: data,
+        connectTimeout: 10000,
+        readTimeout: 10000
+      })
+      if (resp.responseCode !== 200) {
+        console.error('HTTP错误:', resp.responseCode)
+        req.destroy()
+        throw new Error('网络请求失败: ' + resp.responseCode)
+      }
+      req.destroy()
+      return JSON.parse(resp.result as string) as Object
+    } catch (err) {
+      console.error('PUT请求失败:', JSON.stringify(err))
+      throw new Error('网络请求失败')
+    }
+  }
 }
 
 const request: HttpRequest = new HttpRequest()

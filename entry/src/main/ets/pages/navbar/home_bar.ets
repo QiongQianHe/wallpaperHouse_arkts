@@ -1,6 +1,7 @@
 import { mockBanners, mockWallpapers } from '../../utils/data_source'
 import { BannerItem, WallpaperItem } from '../../interface/index'
 import { getRandomColor } from '../../utils/tools'
+import { Footer } from '../../component/Footer'
 
 // 首页Tab - 轮播图 + 推荐壁纸
 
@@ -101,10 +102,7 @@ struct HomeBar {
         .columnsTemplate('1fr 1fr').columnsGap(12).rowsGap(12)
         .width('100%').padding({ left: 16, right: 16 })
 
-        Column() {
-          Text('壁纸小屋 v1.0.1').fontSize(11).fontColor('#cccccc')
-          Text('Copyright © 2026 Wallpaper House').fontSize(10).fontColor('#dddddd').margin({ top: 4 })
-        }.width('100%').padding({ top: 30, bottom: 20 })
+        Footer()
       }
     }
     .scrollBar(BarState.Off).edgeEffect(EdgeEffect.Spring)
