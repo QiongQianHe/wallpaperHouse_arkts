@@ -1,0 +1,478 @@
+Ôr@Ÿªassertions¤code´customTransformCache¬dependencies¢id¤meta±moduleSideEffects¬originalCode±originalSourcemap«resolvedIds®sourcemapChainµsyntheticNamedExportsµtransformDependencies®transformFiles¨cacheAstÔrAÚ.hif (!("finalizeConstruction" in ViewPU.prototype)) {
+    Reflect.set(ViewPU.prototype, "finalizeConstruction", () => { });
+}
+import { HomeBarBuilder } from './navbar/home_bar';
+import { SortBarBuilder } from './navbar/sort_bar';
+import { MineBarBuilder } from './navbar/mine_bar';
+import { SignDestination } from './Sign';
+import { WallpaperDestination } from './Wallpaper';
+import { SetWallpaperDestination } from './SetWallpaper';
+import { WatermarkDestination } from './Watermark';
+import { MineDetailDestination } from './MineDetail';
+import { app_name, use_mock } from '../utils/env';
+import { initMockData } from '../utils/data_source';
+import storage from '../utils/storage';
+import { NetworkDiagnostic } from '../utils/network_diagnostic';
+class Index extends ViewPU {
+    constructor(parent, params, __localStorage, elmtId = -1, paramsLambda = undefined, extraInfo) {
+        super(parent, __localStorage, elmtId, extraInfo);
+        if (typeof paramsLambda === "function") {
+            this.paramsGenerator_ = paramsLambda;
+        }
+        this.__navPathStack = new ObservedPropertyObjectPU(new NavPathStack(), this, "navPathStack");
+        this.addProvidedVar("navPathStack", this.__navPathStack, false);
+        this.__currentIndex = new ObservedPropertySimplePU(0, this, "currentIndex");
+        this.__isLoggedIn = new ObservedPropertySimplePU(false, this, "isLoggedIn");
+        this.__userName = new ObservedPropertySimplePU('æœªç™»å½•', this, "userName");
+        this.setInitiallyProvidedValue(params);
+        this.finalizeConstruction();
+    }
+    setInitiallyProvidedValue(params) {
+        if (params.navPathStack !== undefined) {
+            this.navPathStack = params.navPathStack;
+        }
+        if (params.currentIndex !== undefined) {
+            this.currentIndex = params.currentIndex;
+        }
+        if (params.isLoggedIn !== undefined) {
+            this.isLoggedIn = params.isLoggedIn;
+        }
+        if (params.userName !== undefined) {
+            this.userName = params.userName;
+        }
+    }
+    updateStateVars(params) {
+    }
+    purgeVariableDependenciesOnElmtId(rmElmtId) {
+        this.__navPathStack.purgeDependencyOnElmtId(rmElmtId);
+        this.__currentIndex.purgeDependencyOnElmtId(rmElmtId);
+        this.__isLoggedIn.purgeDependencyOnElmtId(rmElmtId);
+        this.__userName.purgeDependencyOnElmtId(rmElmtId);
+    }
+    aboutToBeDeleted() {
+        this.__navPathStack.aboutToBeDeleted();
+        this.__currentIndex.aboutToBeDeleted();
+        this.__isLoggedIn.aboutToBeDeleted();
+        this.__userName.aboutToBeDeleted();
+        SubscriberManager.Get().delete(this.id__());
+        this.aboutToBeDeletedInternal();
+    }
+    get navPathStack() {
+        return this.__navPathStack.get();
+    }
+    set navPathStack(newValue) {
+        this.__navPathStack.set(newValue);
+    }
+    get currentIndex() {
+        return this.__currentIndex.get();
+    }
+    set currentIndex(newValue) {
+        this.__currentIndex.set(newValue);
+    }
+    get isLoggedIn() {
+        return this.__isLoggedIn.get();
+    }
+    set isLoggedIn(newValue) {
+        this.__isLoggedIn.set(newValue);
+    }
+    get userName() {
+        return this.__userName.get();
+    }
+    set userName(newValue) {
+        this.__userName.set(newValue);
+    }
+    async aboutToAppear() {
+        // åˆå§‹åŒ–Mockæ•°æ®å’Œç¼“å­˜
+        initMockData();
+        // è·å–ä¸Šä¸‹æ–‡å¹¶åˆå§‹åŒ–å­˜å‚¨
+        const context = getContext(this);
+        await storage.init(context);
+        // ç½‘ç»œè¯Šæ–­ï¼ˆä»…å¼€å‘ç¯å¢ƒï¼‰
+        if (!use_mock) {
+            NetworkDiagnostic.checkConfig();
+        }
+        const token = await storage.get('token');
+        this.isLoggedIn = token !== '';
+        AppStorage.setOrCreate('navPathStack', this.navPathStack);
+        await this.checkLoginStatus();
+    }
+    // ç”Ÿå‘½å‘¨æœŸæ–¹æ³•
+    async onPageShow() {
+        await this.checkLoginStatus();
+    }
+    async checkLoginStatus() {
+        const token = await storage.get('token');
+        this.isLoggedIn = token !== '';
+        if (this.isLoggedIn) {
+            const uname = await storage.get('uname');
+            this.userName = uname || 'ç”¨æˆ·';
+        }
+        else {
+            this.userName = 'æœªç™»å½•';
+        }
+        console.info('ç™»å½•çŠ¶æ€æ›´æ–°ï¼š', this.isLoggedIn, this.userName);
+    }
+    PagesMap(name, param, parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            If.create();
+            if (name === 'Sign') {
+                this.ifElseBranchUpdateFunction(0, () => {
+                    SignDestination.bind(this)();
+                });
+            }
+            else if (name === 'Wallpaper') {
+                this.ifElseBranchUpdateFunction(1, () => {
+                    WallpaperDestination.bind(this)();
+                });
+            }
+            else if (name === 'SetWallpaper') {
+                this.ifElseBranchUpdateFunction(2, () => {
+                    SetWallpaperDestination.bind(this)();
+                });
+            }
+            else if (name === 'Watermark') {
+                this.ifElseBranchUpdateFunction(3, () => {
+                    WatermarkDestination.bind(this)();
+                });
+            }
+            else if (name === 'MineDetail') {
+                this.ifElseBranchUpdateFunction(4, () => {
+                    MineDetailDestination.bind(this)();
+                });
+            }
+            else {
+                this.ifElseBranchUpdateFunction(5, () => {
+                });
+            }
+        }, If);
+        If.pop();
+    }
+    initialRender() {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Navigation.create(this.navPathStack, { moduleName: "entry", pagePath: "entry/src/main/ets/pages/Index", isUserCreateStack: true });
+            Navigation.debugLine("entry/src/main/ets/pages/Index.ets(76:5)", "entry");
+            Navigation.mode(NavigationMode.Stack);
+            Navigation.navDestination({ builder: this.PagesMap.bind(this) });
+            Navigation.hideTitleBar(true);
+            Navigation.hideToolBar(true);
+        }, Navigation);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.debugLine("entry/src/main/ets/pages/Index.ets(77:7)", "entry");
+            Column.width('100%');
+            Column.height('100%');
+            Column.backgroundColor('#f5f5f5');
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // é¡¶éƒ¨å¯¼èˆªæ 
+            Row.create();
+            Row.debugLine("entry/src/main/ets/pages/Index.ets(79:9)", "entry");
+            // é¡¶éƒ¨å¯¼èˆªæ 
+            Row.width('100%');
+            // é¡¶éƒ¨å¯¼èˆªæ 
+            Row.height(52);
+            // é¡¶éƒ¨å¯¼èˆªæ 
+            Row.backgroundColor('#ffffff');
+            // é¡¶éƒ¨å¯¼èˆªæ 
+            Row.padding({ left: 16, right: 4 });
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(app_name);
+            Text.debugLine("entry/src/main/ets/pages/Index.ets(80:11)", "entry");
+            Text.fontSize(20);
+            Text.fontWeight(FontWeight.Bold);
+            Text.fontColor('#333333');
+            Text.textAlign(TextAlign.Center);
+            Text.layoutWeight(1);
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create('ğŸ”');
+            Text.debugLine("entry/src/main/ets/pages/Index.ets(86:11)", "entry");
+            Text.fontSize(22);
+            Text.margin({ right: 16 });
+        }, Text);
+        Text.pop();
+        // é¡¶éƒ¨å¯¼èˆªæ 
+        Row.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.create({ index: this.currentIndex });
+            Tabs.debugLine("entry/src/main/ets/pages/Index.ets(96:9)", "entry");
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.barPosition(BarPosition.End);
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.barMode(BarMode.Fixed);
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.barHeight(56);
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.barBackgroundColor('#ffffff');
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.onChange((index) => {
+                this.currentIndex = index;
+            });
+            // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+            Tabs.layoutWeight(1);
+        }, Tabs);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            TabContent.create(() => {
+                HomeBarBuilder.bind(this)();
+            });
+            TabContent.tabBar({ builder: () => {
+                    this.TabBarItem.call(this, 'ğŸ ', 'é¦–é¡µ', 0);
+                } });
+            TabContent.debugLine("entry/src/main/ets/pages/Index.ets(97:11)", "entry");
+        }, TabContent);
+        TabContent.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            TabContent.create(() => {
+                SortBarBuilder.bind(this)();
+            });
+            TabContent.tabBar({ builder: () => {
+                    this.TabBarItem.call(this, 'ğŸ“‚', 'åˆ†ç±»', 1);
+                } });
+            TabContent.debugLine("entry/src/main/ets/pages/Index.ets(102:11)", "entry");
+        }, TabContent);
+        TabContent.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            TabContent.create(() => {
+                MineBarBuilder.bind(this)();
+            });
+            TabContent.tabBar({ builder: () => {
+                    this.TabBarItem.call(this, 'ğŸ‘¤', 'æˆ‘çš„', 2);
+                } });
+            TabContent.debugLine("entry/src/main/ets/pages/Index.ets(107:11)", "entry");
+        }, TabContent);
+        TabContent.pop();
+        // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+        Tabs.pop();
+        Column.pop();
+        Navigation.pop();
+    }
+    TabBarItem(icon, title, idx, parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Column.create();
+            Column.debugLine("entry/src/main/ets/pages/Index.ets(133:5)", "entry");
+            Column.justifyContent(FlexAlign.Center);
+            Column.width('100%');
+            Column.height('100%');
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(icon);
+            Text.debugLine("entry/src/main/ets/pages/Index.ets(134:7)", "entry");
+            Text.fontSize(22);
+            Text.opacity(this.currentIndex === idx ? 1 : 0.45);
+        }, Text);
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            Text.create(title);
+            Text.debugLine("entry/src/main/ets/pages/Index.ets(137:7)", "entry");
+            Text.fontSize(11);
+            Text.fontColor(this.currentIndex === idx ? '#a794ff' : '#999999');
+            Text.margin({ top: 2 });
+        }, Text);
+        Text.pop();
+        Column.pop();
+    }
+    rerender() {
+        this.updateDirtyElements();
+    }
+    static getEntryName() {
+        return "Index";
+    }
+}
+registerNamedRoute(() => new Index(undefined, {}), "", { bundleName: "com.example.endapp", moduleName: "entry", pagePath: "pages/Index", pageFullPath: "entry/src/main/ets/pages/Index", integratedHsp: "false", moduleType: "followWithHap" });
+//# sourceMappingURL=Index.js.mapÂœÙHD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\navbar\home_bar.etsÙHD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\navbar\sort_bar.etsÙHD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\navbar\mine_bar.etsÙ=D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Sign.etsÙBD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Wallpaper.etsÙED:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\SetWallpaper.etsÙBD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Watermark.etsÙCD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\MineDetail.etsÙ;D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\env.tsÙDD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\data_source.etsÙ@D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\storage.etsÙJD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\network_diagnostic.tsÙ>D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Index.etsÔrB›ªmoduleName±isLocalDependency¯isNodeEntryFile§pkgPath±belongProjectPath§pkgNameªpkgVersion±dependencyPkgInfo°belongModulePath§checker¬shouldEmitJs¥entryÃÂÙ!D:\IT-NUIT\HarmonyOS\endApp\entry»D:\IT-NUIT\HarmonyOS\endApp¥entry¥1.0.0Ô  Ù!D:\IT-NUIT\HarmonyOS\endApp\entryÔrCÜ ®¬getNodeCount²getIdentifierCount®getSymbolCount¬getTypeCountµgetInstantiationCountµgetRelationCacheSizes±isUndefinedSymbol±isArgumentsSymbol¯isUnknownSymbol¯getMergedSymbol®getDiagnostics´getGlobalDiagnostics´getRecursionIdentity¶getUnmatchedProperties¹getTypeOfSymbolAtLocation¯getTypeOfSymbolÙ(getSymbolsOfParameterPropertyDeclaration·getDeclaredTypeOfSymbol³getPropertiesOfType±getPropertyOfTypeÙ"getPrivateIdentifierPropertyOfType·getTypeOfPropertyOfType²getIndexInfoOfType³getIndexInfosOfTypeºgetIndexInfosOfIndexSymbol³getSignaturesOfType²getIndexTypeOfType¬getIndexType¬getBaseTypes¸getBaseTypeOfLiteralType®getWidenedType³getTypeFromTypeNode°getParameterTypeÙ$getParameterIdentifierNameAtPosition¸getPromisedTypeOfPromise®getAwaitedType¸getReturnTypeOfSignature®isNullableType¯getNullableType²getNonNullableType²getNonOptionalType°getTypeArguments®typeToTypeNodeÙ$indexInfoToIndexSignatureDeclaration¿signatureToSignatureDeclaration²symbolToEntityName²symbolToExpression¬symbolToNodeÙ!symbolToTypeParameterDeclarations¼symbolToParameterDeclarationºtypeParameterToDeclaration±getSymbolsInScope³getSymbolAtLocation·getIndexInfosAtLocationÙ!getShorthandAssignmentValueSymbolÙ#getExportSpecifierLocalTargetSymbol·getExportSymbolOfSymbol±getTypeAtLocationÙ tryGetTypeAtLocationWithoutCheckºgetTypeOfAssignmentPatternÙ*getPropertySymbolOfDestructuringAssignment±signatureToString¬typeToString®symbolToStringµtypePredicateToString®writeSignature©writeType«writeSymbol²writeTypePredicate¼getAugmentedPropertiesOfType®getRootSymbols²getSymbolOfExpando±getContextualTypeÙ(getContextualTypeForObjectLiteralElementÙ#getContextualTypeForArgumentAtIndexÙ getContextualTypeForJsxAttribute²isContextSensitiveÙ!getTypeOfPropertyOfContextualTypeµgetFullyQualifiedNameÙ#tryGetResolvedSignatureWithoutCheck´getResolvedSignatureÙ/getResolvedSignatureForStringLiteralCompletionsÙ$getResolvedSignatureForSignatureHelpµgetExpandedParameters¹hasEffectiveRestParameterºcontainsArgumentsReference°getConstantValueµisValidPropertyAccessÙ#isValidPropertyAccessForCompletions»getSignatureFromDeclarationºisImplementationOfOverload¹getImmediateAliasedSymbol°getAliasedSymbol¯getEmitResolver²getExportsOfModule¿getExportsAndPropertiesOfModuleÙ forEachExportAndPropertyOfModule¯getSymbolWalker±getAmbientModules¹getJsxIntrinsicTagNamesAt³isOptionalParameter»tryGetMemberInModuleExportsÙ(tryGetMemberInModuleExportsAndProperties´tryFindAmbientModuleÙ(tryFindAmbientModuleWithoutAugmentations¯getApparentType¬getUnionType²isTypeAssignableTo³createAnonymousType¯createSignature¬createSymbol¯createIndexInfoªgetAnyType­getStringType­getNumberType±createPromiseType¯createArrayType¹getElementTypeOfArrayType®getBooleanType¬getFalseType«getTrueType«getVoidType°getUndefinedType«getNullType¯getESSymbolType¬getNeverType¯getOptionalType®getPromiseType²getPromiseLikeType´getAsyncIterableType²isSymbolAccessible«isArrayType«isTupleType¯isArrayLikeTypeÙ#isTypeInvalidDueToUnionDiscriminantºgetExactOptionalProperties¿getAllPossiblePropertiesOfTypesÙ(getSuggestedSymbolForNonexistentPropertyÙ#getSuggestionForNonexistentPropertyÙ,getSuggestedSymbolForNonexistentJSXAttributeÙ&getSuggestedSymbolForNonexistentSymbolÙ!getSuggestionForNonexistentSymbolÙ&getSuggestedSymbolForNonexistentModuleÙ!getSuggestionForNonexistentExportÙ+getSuggestedSymbolForNonexistentClassMember·getBaseConstraintOfType»getDefaultFromTypeParameter«resolveName¯getJsxNamespaceµgetJsxFragmentFactory¸getAccessibleSymbolChain»getTypePredicateOfSignature¹resolveExternalModuleName»resolveExternalModuleSymbol°tryGetThisTypeAt¹getTypeArgumentConstraint¸getSuggestionDiagnostics¸runWithCancellationTokenÙ3getLocalTypeParametersOfClassOrInterfaceOrTypeAlias´isDeclarationVisible´isPropertyAccessible»getTypeOnlyAliasDeclaration¿getMemberOverrideModifierStatusÙ!isTypeParameterPossiblyReferenced²getConstEnumRelate´clearConstEnumRelateµdeleteConstEnumRelateÙ$getTypeArgumentsForResolvedSignatureµgetCheckedSourceFilesÙ"collectHaveTsNoCheckFilesForLinter·clearQualifiedNameCache®isStaticRecord²isStaticSourceFile³createIntrinsicTypeÔ  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  Ô  ÃÃÚ­import { HomeBarBuilder } from './navbar/home_bar'
+import { SortBarBuilder } from './navbar/sort_bar'
+import { MineBarBuilder } from './navbar/mine_bar'
+import { SignDestination } from './Sign'
+import { WallpaperDestination } from './Wallpaper'
+import { SetWallpaperDestination } from './SetWallpaper'
+import { WatermarkDestination } from './Watermark'
+import { MineDetailDestination } from './MineDetail'
+import { app_name, use_mock } from '../utils/env'
+import { initMockData } from '../utils/data_source'
+import storage from '../utils/storage'
+import common from '@ohos.app.ability.common'
+import { NetworkDiagnostic } from '../utils/network_diagnostic'
+
+// ä¸»å…¥å£é¡µé¢ - Navigationç»„ä»¶æ¡†æ¶ + Tabs + å­é¡µé¢è·¯ç”±
+// ä½¿ç”¨ Navigation + NavPathStack å®ç°ç»„ä»¶å¯¼èˆª
+
+@Entry
+@Component
+struct Index {
+  @Provide('navPathStack') navPathStack: NavPathStack = new NavPathStack()
+  @State currentIndex: number = 0
+  @State isLoggedIn: boolean = false
+  @State userName: string = 'æœªç™»å½•'
+
+  async aboutToAppear(): Promise<void> {
+    // åˆå§‹åŒ–Mockæ•°æ®å’Œç¼“å­˜
+    initMockData()
+    // è·å–ä¸Šä¸‹æ–‡å¹¶åˆå§‹åŒ–å­˜å‚¨
+    const context = getContext(this) as common.UIAbilityContext
+    await storage.init(context)
+    
+    // ç½‘ç»œè¯Šæ–­ï¼ˆä»…å¼€å‘ç¯å¢ƒï¼‰
+    if (!use_mock) {
+      NetworkDiagnostic.checkConfig()
+    }
+    
+    const token = await storage.get('token')
+    this.isLoggedIn = token !== ''
+    AppStorage.setOrCreate('navPathStack', this.navPathStack)
+    await this.checkLoginStatus()
+  }
+
+  // ç”Ÿå‘½å‘¨æœŸæ–¹æ³•
+  async onPageShow(): Promise<void> {
+    await this.checkLoginStatus()
+  }
+  async checkLoginStatus(): Promise<void> {
+    const token = await storage.get('token')
+    this.isLoggedIn = token !== ''
+    if (this.isLoggedIn) {
+      const uname = await storage.get('uname')
+      this.userName = uname || 'ç”¨æˆ·'
+    } else {
+      this.userName = 'æœªç™»å½•'
+    }
+    console.info('ç™»å½•çŠ¶æ€æ›´æ–°ï¼š', this.isLoggedIn, this.userName)
+  }
+
+  @Builder
+  PagesMap(name: string, param: object) {
+    if (name === 'Sign') {
+      SignDestination()
+    } else if (name === 'Wallpaper') {
+      WallpaperDestination()
+    } else if (name === 'SetWallpaper') {
+      SetWallpaperDestination()
+    } else if (name === 'Watermark') {
+      WatermarkDestination()
+    } else if (name === 'MineDetail') {
+      MineDetailDestination()
+    }
+  }
+
+  build() {
+    Navigation(this.navPathStack) {
+      Column() {
+        // é¡¶éƒ¨å¯¼èˆªæ 
+        Row() {
+          Text(app_name)
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .fontColor('#333333')
+            .textAlign(TextAlign.Center)
+            .layoutWeight(1)
+          Text('ğŸ”')
+            .fontSize(22)
+            .margin({ right: 16 })
+        }
+        .width('100%')
+        .height(52)
+        .backgroundColor('#ffffff')
+        .padding({ left: 16, right: 4 })
+
+        // Tab å†…å®¹åŒºåŸŸï¼ˆå æ®å‰©ä½™ç©ºé—´ï¼‰
+        Tabs({ index: this.currentIndex }) {
+          TabContent() {
+            HomeBarBuilder()
+          }
+          .tabBar(this.TabBarItem('ğŸ ', 'é¦–é¡µ', 0))
+
+          TabContent() {
+            SortBarBuilder()
+          }
+          .tabBar(this.TabBarItem('ğŸ“‚', 'åˆ†ç±»', 1))
+
+          TabContent() {
+            MineBarBuilder()
+          }
+          .tabBar(this.TabBarItem('ğŸ‘¤', 'æˆ‘çš„', 2))
+        }
+        .barPosition(BarPosition.End)  // TabBar åœ¨åº•éƒ¨
+        .barMode(BarMode.Fixed)
+        .barHeight(56)
+        .barBackgroundColor('#ffffff')
+        .onChange((index: number) => {
+          this.currentIndex = index
+        })
+        .layoutWeight(1)
+      }
+      .width('100%')
+      .height('100%')
+      .backgroundColor('#f5f5f5')
+    }
+    .mode(NavigationMode.Stack)
+    .navDestination(this.PagesMap)
+    .hideTitleBar(true)
+    .hideToolBar(true)
+  }
+
+  @Builder
+  TabBarItem(icon: string, title: string, idx: number) {
+    Column() {
+      Text(icon)
+        .fontSize(22)
+        .opacity(this.currentIndex === idx ? 1 : 0.45)
+      Text(title)
+        .fontSize(11)
+        .fontColor(this.currentIndex === idx ? '#a794ff' : '#999999')
+        .margin({ top: 2 })
+    }
+    .justifyContent(FlexAlign.Center)
+    .width('100%')
+    .height('100%')
+  }
+}ÀÔrDœ¦./Sign±./navbar/mine_bar«./Wallpaper±./navbar/sort_bar±./navbar/home_bar¬../utils/env®./SetWallpaper¬./MineDetail«./Watermark´../utils/data_source°../utils/storage»../utils/network_diagnosticÔrE—ªassertions¨external¢id¤meta±moduleSideEffectsªresolvedByµsyntheticNamedExportsAÂÙ=D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Sign.etsAÃªoh-resolveÂEAÂÙHD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\navbar\mine_bar.etsAÃªoh-resolveÂEAÂÙBD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Wallpaper.etsAÃªoh-resolveÂEAÂÙHD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\navbar\sort_bar.etsAÃªoh-resolveÂEAÂÙHD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\navbar\home_bar.etsAÃªoh-resolveÂEAÂÙ;D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\env.tsAÃªoh-resolveÂEAÂÙED:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\SetWallpaper.etsAÃªoh-resolveÂEAÂÙCD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\MineDetail.etsAÃªoh-resolveÂEAÂÙBD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\pages\Watermark.etsAÃªoh-resolveÂEAÂÙDD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\data_source.etsAÃªoh-resolveÂEAÂÙ@D:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\storage.etsAÃªoh-resolveÂEAÂÙJD:\IT-NUIT\HarmonyOS\endApp\entry\src\main\ets\utils\network_diagnostic.tsAÃªoh-resolveÂ“ÔrF–§version¤fileªsourceRoot§sources¥names¨mappings¨Index.js ‘©Index.etsÜ˜”    ”  ”	  	”  ”  ”  ”2  2”3  2˜”   ” ”	 	” ” ” ”2 2”3 2˜”   ” ”	 	” ” ” ”2 2”3 2˜”   ” ”	 	” ” ”   ”( (”) (˜”   ” ”	 	” ” ”% %”2 2”3 2˜”   ” ”	 	”   ”" "”( (”8 8”9 8˜”   ” ”	 	” ” ”% %”2 2”3 2˜”   ” ”	 	” ”   ”& &”4 4”5 4š”   ” ”	 	” ” ” ” ”# #”1 1”2 1˜”  	 ” 	”	 		” 	” 	” 	”3 	3”4 	3–”  
+ ” 
+” 
+” 
+”& 
+&”' 
+&˜”   ” ”	 	” ” ”" "”? ?”Ì@ ?’” ” ‘”  ””; 8”? <”ÌK ÌH”ÌM ÌJ’”;  ”< !’”9 ”> $’”7 ”< !‘” ?’” ” '’” ” '’” 	” ’” 	” ’” 	” ’” 	” ’” 	” ’” 	” ”” ”	 ”
+ ” ’” ” ”” ” ” ” ’” ” ™” ” 
+” ” ”" ”# ”' #”( ?”) ?™” ” 
+” ” ” ” ”" ”# ”$ ’”  ”  •” !” !” !	” !” !–” "” "” "”) "#”+ "%”, "%‘”	 #œ” %” %
+” %” %” %”# %”$ % ”' %#”( %$”/ %+”0 %,”1 %,™” &” &” &	” &” &” &”$ & ”& &"”' &"œ” '” '” '” '” '”- ')”/ '+”3 '/”4 '0”Ì@ '<”ÌA '=”ÌB '=—” (” (
+” (” (”# (”% (!”& (!’” )” )’” +” +”” ,”	 ,”
+ ,” ,—” -” -
+” -” -”# -”% -!”& -!’” .” .”” /”	 /”
+ /” /œ” 0” 0
+” 0” 0” 0”# 0”$ 0 ”' 0#”( 0$”/ 0+”0 0,”1 0,™” 1” 1” 1	” 1” 1” 1”$ 1 ”& 1"”' 1"–” 2” 2” 2” 2” 2” 2œ” 3” 3” 3” 3”  3”' 3!”( 3"”+ 3%”, 3&”3 3-”4 3.”5 3.™” 4” 4
+” 4” 4” 4”! 4”% 4”) 4#”* 4#‘”	 5‘” 5—” 6” 6
+” 6” 6” 6”! 6”" 6‘”	 7Ü ” 8” 8” 8” 8” 8” 8”  8”$ 8 ”% 8!”/ 8+”1 8-”5 81”6 82”> 8:”? 8;”Ì@ 8;’” 9” 9–” <” <
+” <” <” <” <&–” =” =” =” =” =”! =“” >”# >”0 >‘” ?–” ?” ?” ?” ?”) ?#”+ ?%“” Ì@”( Ì@”5 Ì@‘” ÌA–” ÌA” ÌA” ÌA” ÌA”, ÌA&”. ÌA(“” ÌB”+ ÌB”8 ÌB‘” ÌC–” ÌC” ÌC” ÌC” ÌC”) ÌC#”+ ÌC%“” ÌD”( ÌD”5 ÌD‘” ÌE–” ÌE” ÌE” ÌE” ÌE”* ÌE$”, ÌE&“” ÌF”) ÌF”6 ÌF‘” ÌG‘” ÌG‘” ÌH‘” ÌJ–” ÌK” ÌK” ÌK”" ÌK”# ÌK”/ ÌK ˜” ÌK” ÌK” Ì|” Ì|	” Ì|
+”* Ì|”+ Ì|”0 Ì|˜” ÌK” ÌK” Ì}”% Ì}”1 Ì}”5 Ì}”6 Ì}”> Ì}!–” ÌK” ÌK” Ì~”# Ì~”$ Ì~”( Ì~–” ÌK” ÌK” Ì”" Ì”# Ì”' Ì’” ÌL” ÌL–” ÌL” ÌL” Ìx” Ìx” Ìx” Ìx–” ÌL” ÌL” Ìy” Ìy” Ìy”  Ìy–” ÌL” ÌL” Ìz”" Ìz”# Ìz”, Ìz ’” ÌM” ÌM’” ÌN” ÌN’” ÌM” ÌM–” ÌN” ÌN” ÌY	” ÌY” ÌY” ÌY’” ÌM” ÌM–” ÌN” ÌN” ÌZ	” ÌZ” ÌZ” ÌZ’” ÌM” ÌM–” ÌN” ÌN” Ì[	” Ì[”  Ì[”) Ì["’” ÌM” ÌM” ÌN” ÌN” Ì\	” Ì\” Ì\” Ì\” Ì\”  Ì\”" Ì\”$ Ì\”) Ì\"”+ Ì\$”, Ì\%”. Ì\'”” ÌO
+” ÌO” ÌO”  ÌO–” ÌO
+” ÌO” ÌP” ÌP” ÌP” ÌP˜” ÌO
+” ÌO” ÌQ” ÌQ” ÌQ”& ÌQ"”' ÌQ#”+ ÌQ'–” ÌO
+” ÌO” ÌR” ÌR” ÌR”$ ÌR ˜” ÌO
+” ÌO” ÌS” ÌS” ÌS”$ ÌS ”% ÌS!”+ ÌS'–” ÌO
+” ÌO” ÌT” ÌT” ÌT” ÌT’” ÌO
+” ÌO”” ÌU
+” ÌU” ÌU” ÌU–” ÌU
+” ÌU” ÌV” ÌV” ÌV” ÌVš” ÌU
+” ÌU” ÌW” ÌW” ÌW” ÌW” ÌW”! ÌW”# ÌW”% ÌW!’” ÌU
+” ÌU’” ÌM” ÌM’” ÌN” ÌN’” Ì^” Ì^š” Ì_” Ì_” Ì_” Ì_” Ì_”! Ì_”% Ì_”& Ì_”2 Ì_'”4 Ì_)’” Ì^” Ì^˜” Ì_” Ì_” Ìo	” Ìo” Ìo”( Ìo ”) Ìo!”, Ìo$’” Ì^” Ì^˜” Ì_” Ì_” Ìp	” Ìp” Ìp”  Ìp”! Ìp”& Ìp’” Ì^” Ì^–” Ì_” Ì_” Ìq	” Ìq” Ìq” Ìq’” Ì^” Ì^–” Ì_” Ì_” Ìr	”# Ìr”$ Ìr”- Ìr%’” Ì^” Ì^™” Ì_” Ì_” Ìs	” Ìs” Ìs” Ìs”  Ìs ”" Ìs"”$ Ìs$—” Ìt
+” Ìt” Ìt”! Ìt”$ Ìt”) Ìt#”* Ìt#’” Ìu” Ìu	’” Ì^” Ì^–” Ì_” Ì_” Ìv	” Ìv” Ìv” Ìv“” Ìa” Ìa”+ Ìa’” Ìc” Ìcš” Ìc” Ìc” Ìc”# Ìc!”/ Ìc"”3 Ìc&”5 Ìc(”9 Ìc,”; Ìc.”< Ìc/“” Ìf” Ìf”+ Ìf’” Ìh” Ìhš” Ìh” Ìh” Ìh”# Ìh!”/ Ìh"”3 Ìh&”5 Ìh(”9 Ìh,”; Ìh.”< Ìh/“” Ìk” Ìk”+ Ìk’” Ìm” Ìmš” Ìm” Ìm” Ìm”# Ìm!”/ Ìm"”3 Ìm&”5 Ìm(”9 Ìm,”; Ìm.”< Ìm/’” Ì^” Ì^’” Ì_” Ì_’” ÌL” ÌL’” ÌK” ÌK‘” Ì€˜” Ìƒ” Ìƒ” Ìƒ” Ìƒ” Ìƒ” Ìƒ(” Ìƒ*” Ìƒ5’” Ì„” Ì„
+˜” Ì„” Ì„
+” Ì”! Ì”" Ì”+ Ì”, Ì”2 Ì$–” Ì„” Ì„
+” Ì” Ì
+” Ì” Ì–” Ì„” Ì„
+” Ì” Ì” Ì”  Ì”” Ì…” Ì…
+” Ì…” Ì…–” Ì…” Ì…
+” Ì†	” Ì†” Ì†” Ì†Ü ” Ì…” Ì…
+” Ì‡	” Ì‡” Ì‡” Ì‡” Ì‡”* Ì‡"”/ Ì‡'”2 Ì‡*”3 Ì‡+”4 Ì‡,”5 Ì‡-”6 Ì‡.”7 Ì‡/”8 Ì‡0”9 Ì‡1”= Ì‡5’” Ì…” Ì…
+”” Ìˆ” Ìˆ
+” Ìˆ” Ìˆ–” Ìˆ” Ìˆ
+” Ì‰	” Ì‰” Ì‰” Ì‰Ü ” Ìˆ” Ìˆ
+” ÌŠ	” ÌŠ” ÌŠ” ÌŠ”  ÌŠ”, ÌŠ$”1 ÌŠ)”4 ÌŠ,”5 ÌŠ-”6 ÌŠ.”7 ÌŠ/”Ì@ ÌŠ8”ÌA ÌŠ9”ÌB ÌŠ:”ÌC ÌŠ;”ÌL ÌŠÌDš” Ìˆ” Ìˆ
+” Ì‹	” Ì‹” Ì‹” Ì‹” Ì‹” Ì‹”  Ì‹”" Ì‹’” Ìˆ” Ìˆ
+’” Ì„” Ì„
+‘” ÌÔrG–§version¤file§sources®sourcesContent¥names¨mappingsÀ‘À‘ÀÜ‘”    ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”  	 ‘”  
+ ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”   ‘”    ‘”  ! ‘”  " ‘”  # ‘”  $ ‘”  % ‘”  & ‘”  ' ‘”  ( ‘”  ) ‘”  * ‘”  + ‘”  , ‘”  - ‘”  . ‘”  / ‘”  0 ‘”  1 ‘”  2 ‘”  3 ‘”  4 ‘”  5 ‘”  6 ‘”  7 ‘”  8 ‘”  9 ‘”  : ‘”  ; ‘”  < ‘”  = ‘”  > ‘”  ? ‘”  Ì@ ‘”  ÌA ‘”  ÌB ‘”  ÌC ‘”  ÌD ‘”  ÌE ‘”  ÌF ‘”  ÌG ‘”  ÌH ‘”  ÌI ‘”  ÌJ ‘”  ÌK ‘”  ÌL ‘”  ÌM ‘”  ÌN ‘”  ÌO ‘”  ÌP ‘”  ÌQ ‘”  ÌR ‘”  ÌS ‘”  ÌT ‘”  ÌU ‘”  ÌV ‘”  ÌW ‘”  ÌX ‘”  ÌY ‘”  ÌZ ‘”  Ì[ ‘”  Ì\ ‘”  Ì] ‘”  Ì^ ‘”  Ì_ ‘”  Ì` ‘”  Ìa ‘”  Ìb ‘”  Ìc ‘”  Ìd ‘”  Ìe ‘”  Ìf ‘”  Ìg ‘”  Ìh ‘”  Ìi ‘”  Ìj ‘”  Ìk ‘”  Ìl ‘”  Ìm ‘”  Ìn ‘”  Ìo ‘”  Ìp ‘”  Ìq ‘”  Ìr ‘”  Ìs ‘”  Ìt ‘”  Ìu ‘”  Ìv ‘”  Ìw ‘”  Ìx ‘”  Ìy ‘”  Ìz ‘”  Ì{ ‘”  Ì| ‘”  Ì} ‘”  Ì~ ‘”  Ì ‘”  Ì€ ‘”  Ì ‘”  Ì‚ ‘”  Ìƒ ‘”  Ì„ ‘”  Ì… ‘”  Ì† ‘”  Ì‡ ‘”  Ìˆ ‘”  Ì‰ ‘”  ÌŠ ‘”  Ì‹ ‘”  ÌŒ ‘”  Ì ‘”  Ì ‘”  Ì ‘”  Ì ‘”  Ì‘ ‘”  Ì’ ‘”  Ì“ ‘”  Ì” ‘”  Ì• ‘”  Ì– ‘”  Ì— ‘”  Ì˜ ‘”  Ì™ ‘”  Ìš ‘”  Ì› ‘”  Ìœ ‘”  Ì ‘”  Ì ‘”  ÌŸ ‘”  Ì  ‘”  Ì¡ ‘”  Ì¢ ‘”  Ì£ ‘”  Ì¤ ‘”  Ì¥ ‘”  Ì¦ ‘”  Ì§ ‘”  Ì¨ ‘”  Ì© ‘”  Ìª ‘”  Ì« ‘”  Ì¬ ‘”  Ì­ ‘”  Ì® ‘”  Ì¯ ‘”  Ì° ‘”  Ì± ‘”  Ì² ‘”  Ì³ ‘”  Ì´ ‘”  Ìµ ‘”  Ì¶ ‘”  Ì· ‘”  Ì¸ ‘”  Ì¹ ‘”  Ìº ‘”  Ì» ‘”  Ì¼ ‘”  Ì½ ‘”  Ì¾ ‘”  Ì¿ ‘”  ÌÀ ‘”  ÌÁ ‘”  ÌÂ ‘”  ÌÃ ‘”  ÌÄ ‘”  ÌÅ ‘”  ÌÆ ‘”  ÌÇ ‘”  ÌÈ ‘”  ÌÉ ‘”  ÌÊ ‘”  ÌË ‘”  ÌÌ ‘”  ÌÍ ‘”  ÌÎ ‘”  ÌÏ ‘”  ÌĞ ‘”  ÌÑ ‘”  ÌÒ ‘”  ÌÓ ‘”  ÌÔ ‘”  ÌÕ ‘”  ÌÖ ‘”  Ì× ‘”  ÌØ ‘”  ÌÙ ‘”  ÌÚ ‘”  ÌÛ ‘”  ÌÜ ‘”  Ìİ ‘”  ÌŞ ‘”  Ìß ‘”  Ìà ‘”  Ìá ‘”  Ìâ ‘”  Ìã ‘”  Ìä ‘”  Ìå ‘”  Ìæ ‘”  Ìç ‘”  Ìè ‘”  Ìé ‘”  Ìê ‘”  Ìë ‘”  Ìì ‘”  Ìí ‘”  Ìî ‘”  Ìï ‘”  Ìğ ‘”  Ìñ ‘”  Ìò ‘”  Ìó ‘”  Ìô ‘”  Ìõ ‘”  Ìö ‘”  Ì÷ ‘”  Ìø ‘”  Ìù ‘”  Ìú ‘”  Ìû ‘”  Ìü ‘”  Ìı ‘”  Ìş ‘”  Ìÿ ‘”  Í  ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í	 ‘”  Í
+ ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ‘”  Í ÔrH’§missing¦pluginÃ¦genAbcÂÔ  ÔrI”²dynamicImportCache¹exportAllDeclarationCache»exportNamedDeclarationCache«importCacheœÔrJ•¤type¥start£endªspecifiers¦source±ImportDeclarationÌ€Ì³‘ÔrK•¤type¥start£end¨imported¥local¯ImportSpecifierÌ‰Ì—ÔrL”¤type¥start£end¤nameªIdentifierÌ‰Ì—®HomeBarBuilderLªIdentifierÌ‰Ì—®HomeBarBuilderÔrM•¤type¥start£end¥value£raw§LiteralÌŸÌ²±./navbar/home_bar³'./navbar/home_bar'J±ImportDeclarationÌµÌè‘K¯ImportSpecifierÌ¾ÌÌLªIdentifierÌ¾ÌÌ®SortBarBuilderLªIdentifierÌ¾ÌÌ®SortBarBuilderM§LiteralÌÔÌç±./navbar/sort_bar³'./navbar/sort_bar'J±ImportDeclarationÌêÍ‘K¯ImportSpecifierÌóÍLªIdentifierÌóÍ®MineBarBuilderLªIdentifierÌóÍ®MineBarBuilderM§LiteralÍ	Í±./navbar/mine_bar³'./navbar/mine_bar'J±ImportDeclarationÍÍH‘K¯ImportSpecifierÍ(Í7LªIdentifierÍ(Í7¯SignDestinationLªIdentifierÍ(Í7¯SignDestinationM§LiteralÍ?ÍG¦./Sign¨'./Sign'J±ImportDeclarationÍJÍ}‘K¯ImportSpecifierÍSÍgLªIdentifierÍSÍg´WallpaperDestinationLªIdentifierÍSÍg´WallpaperDestinationM§LiteralÍoÍ|«./Wallpaper­'./Wallpaper'J±ImportDeclarationÍÍ¸‘K¯ImportSpecifierÍˆÍŸLªIdentifierÍˆÍŸ·SetWallpaperDestinationLªIdentifierÍˆÍŸ·SetWallpaperDestinationM§LiteralÍ§Í·®./SetWallpaper°'./SetWallpaper'J±ImportDeclarationÍºÍí‘K¯ImportSpecifierÍÃÍ×LªIdentifierÍÃÍ×´WatermarkDestinationLªIdentifierÍÃÍ×´WatermarkDestinationM§LiteralÍßÍì«./Watermark­'./Watermark'J±ImportDeclarationÍïÍ$‘K¯ImportSpecifierÍøÍLªIdentifierÍøÍµMineDetailDestinationLªIdentifierÍøÍµMineDetailDestinationM§LiteralÍÍ#¬./MineDetail®'./MineDetail'J±ImportDeclarationÍ&ÍX’K¯ImportSpecifierÍ/Í7LªIdentifierÍ/Í7¨app_nameLªIdentifierÍ/Í7¨app_nameK¯ImportSpecifierÍ9ÍALªIdentifierÍ9ÍA¨use_mockLªIdentifierÍ9ÍA¨use_mockM§LiteralÍIÍW¬../utils/env®'../utils/env'J±ImportDeclarationÍZÍ‘K¯ImportSpecifierÍcÍoLªIdentifierÍcÍo¬initMockDataLªIdentifierÍcÍo¬initMockDataM§LiteralÍwÍ´../utils/data_source¶'../utils/data_source'J±ImportDeclarationÍÍ·‘ÔrN”¤type¥start£end¥local¶ImportDefaultSpecifierÍ—ÍLªIdentifierÍ—Í§storageM§LiteralÍ¤Í¶°../utils/storage²'../utils/storage'J±ImportDeclarationÍ¹Íù‘K¯ImportSpecifierÍÂÍÓLªIdentifierÍÂÍÓ±NetworkDiagnosticLªIdentifierÍÂÍÓ±NetworkDiagnosticM§LiteralÍÛÍø»../utils/network_diagnostic½'../utils/network_diagnostic'
